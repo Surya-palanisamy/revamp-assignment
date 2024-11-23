@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bacon Ipsum</title>
+    <style>
+      /* Basic styling for the webpage */
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      header {
+        background-color: #333;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        width: 100%;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin: 20px;
+        font-size: 16px;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      #content {
+        margin: 20px;
+        padding: 10px;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: justify;
+      }
+
+      #error {
+        color: red;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .loading {
+        text-align: center;
+        font-size: 18px;
+        color: #4caf50;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Bacon Ipsum Generator</h1>
+      <button id="refreshBtn">Get New Bacon Ipsum</button>
+    </header>
+
+    <main>
+      <div id="content">
+        <p id="baconText" class="loading">Loading bacon ipsum...</p>
+      </div>
+      <div id="error"></div>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Bacon Ipsum</p>
+    </footer>
+
+    <script>
+      // Async function to fetch bacon ipsum data
+      async function fetchBaconIpsum() {
+        const baconTextElement = document.getElementById("baconText");
+        const errorElement = document.getElementById("error");
+        baconTextElement.textContent = "Loading bacon ipsum..."; // Show loading text
+
+        try {
+          const response = await fetch("https://baconipsum.com/api/?type=all");
+
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const data = await response.json();
+          baconTextElement.textContent = data.join(" "); // Display the fetched bacon ipsum
+          errorElement.textContent = ""; // Clear any previous error messages
+        } catch (error) {
+          console.error("Error fetching bacon ipsum:", error);
+          baconTextElement.textContent = ""; // Clear the bacon text while showing error
+          errorElement.textContent =
+            "Failed to load bacon ipsum. Please try again later."; // Display error message
+        }
+      }
+
+      // Fetch bacon ipsum on page load
+      document.addEventListener("DOMContentLoaded", fetchBaconIpsum);
+
+      // Refresh button functionality
+      document
+        .getElementById("refreshBtn")
+        .addEventListener("click", fetchBaconIpsum);
+    </script>
+  </body>
+</html>
