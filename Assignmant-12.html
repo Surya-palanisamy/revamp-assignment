@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Password</title>
+    <style>
+      /* General body styling */
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f7fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      /* Form container styling */
+      h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      form {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+      }
+
+      /* Input field styling */
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        border-color: #007bff;
+        outline: none;
+      }
+
+      /* Button styling */
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      /* Feedback styling */
+      #feedback {
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      /* Success message styling */
+      #feedback.success {
+        color: green;
+      }
+
+      /* Error message styling */
+      #feedback.error {
+        color: red;
+      }
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+  </head>
+  <body>
+    <form id="update-password-form">
+      <input
+        type="text"
+        id="userId"
+        placeholder="Enter User ID"
+        required
+      /><br />
+      <input
+        type="password"
+        id="newPassword"
+        placeholder="Enter New Password"
+        required
+      /><br />
+      <button type="submit">Update Password</button>
+    </form>
+
+    <div id="feedback"></div>
+
+    <script>
+      // Firebase Configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBkdIbb5UASWsPIHphcyxfNhRJ0dwGMgAw",
+        authDomain: "graphitexdraw.firebaseapp.com",
+        projectId: "graphitexdraw",
+        storageBucket: "graphitexdraw.firebasestorage.app",
+        messagingSenderId: "963437749809",
+        appId: "1:963437749809:web:5e3393b39e5cc768c31710",
+        measurementId: "G-BXTQPTJ53T",
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+
+      // Handle form submission
+      document
+        .getElementById("update-password-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const userId = document.getElementById("userId").value;
+          const newPassword = document.getElementById("newPassword").value;
+
+          // Validate inputs
+          if (!userId || !newPassword) {
+            document.getElementById("feedback").textContent =
+              "All fields are required!";
+            return;
+          }
+
+          // Update the password in Firebase Realtime Database
+          const userRef = database.ref("users/" + userId);
+          userRef
+            .update({
+              password: newPassword,
+            })
+            .then(() => {
+              document.getElementById("feedback").textContent =
+                "Password updated successfully!";
+              document.getElementById("update-password-form").reset(); // Reset the form
+            })
+            .catch((error) => {
+              document.getElementById("feedback").textContent =
+                "Error: " + error.message;
+            });
+        });
+    </script>
+  </body>
+</html>
